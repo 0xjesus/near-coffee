@@ -1,0 +1,28 @@
+name: brew
+description: "Brew — buy your favourite NEAR builder a coffee. A tip jar built with the near_dart SDK."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # The whole point: this app is built entirely on the published NEAR Flutter
+  # stack — sign & send via near_dart, wallet connect via near_wallet_connect.
+  near_dart: ^0.2.2
+  near_wallet_connect: ^0.1.1
+
+  google_fonts: ^6.2.1
+  url_launcher: ^6.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
