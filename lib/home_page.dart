@@ -450,7 +450,7 @@ class _SupporterCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(s.premium ? '☕' : '🤍', style: const TextStyle(fontSize: 18)),
+          const Text('☕', style: TextStyle(fontSize: 18)),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -463,6 +463,17 @@ class _SupporterCard extends StatelessWidget {
                     style: Coffee.body(14, color: Coffee.ink, height: 1.3)),
               ],
             ),
+          ),
+          const SizedBox(width: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Coffee.terracotta.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text('${s.amountNear} Ⓝ',
+                style: Coffee.mono(11.5,
+                    color: Coffee.terracottaDeep, weight: FontWeight.w700)),
           ),
         ],
       ),

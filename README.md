@@ -23,28 +23,55 @@ This whole app is ~8 files. The NEAR parts are two calls:
 ```dart
 // read the supporters wall (a view call)
 final list = await client.callFunction(
-  accountId: AccountId('guestbook.near-examples.testnet'),
-  methodName: 'get_messages',
-  args: {'from_index': '$from', 'limit': '12'},
+  accountId: AccountId('nearcoffee-jar.testnet'),
+  methodName: 'get_tips',
+  args: {'from_index': from, 'limit': 12},
   blockReference: BlockReference.finality(Finality.final_),
 );
 
 // send a tip — signs locally with the connected function-call key
 await signer.callFunction(
-  contractId: AccountId('guestbook.near-examples.testnet'),
-  methodName: 'add_message',
-  args: {'text': message},
+  contractId: AccountId('nearcoffee-jar.testnet'),
+  methodName: 'tip',
+  args: {'message': message},
   deposit: NearToken.parse('1'), // 1 NEAR ≈ a coffee
 );
 ```
 
-## How tips settle
+## The smart contract
 
-On **testnet**, tips are recorded through the canonical NEAR guestbook contract:
-`add_message{ text }` carries the tip as its attached deposit, and `get_messages`
-is the public supporters wall. For mainnet you'd point `contractId` at a dedicated
-tip contract that forwards the deposit to the creator — same SDK calls, different
-address.
+Tips settle through **our own tip-jar contract** (in [`contract/`](contract/), ~70
+lines of Rust / near-sdk 5). `tip(message)` is payable: it records the supporter +
+message + amount on-chain **and forwards the attached deposit straight to the
+creator** — so a tip actually reaches them, instead of leaving NEAR in a stranger's
+contract. `get_tips` is the public supporters wall.
+
+```rust
+#[payable]
+pub fn tip(&mut self, message: String) -> U128 {
+    let amount = env::attached_deposit();
+    self.tips.push(Tip { account_id: env::predecessor_account_id(), /* … */ });
+    Promise::new(self.beneficiary.clone()).transfer(amount); // → the creator
+    U128(self.tips.len() as u128)
+}
+```
+
+**Deployed & verified on testnet:**
+- Contract: [`nearcoffee-jar.testnet`](https://testnet.nearblocks.io/address/nearcoffee-jar.testnet)
+  · beneficiary `nearcoffee-creator.testnet`
+- A real tip forwarded 1 NEAR to the creator:
+  [`DBWiaED…EJo7`](https://testnet.nearblocks.io/txns/DBWiaEDsHidWeLKfr8vWPjLEc2xwZWRHrnERXZYfEJo7)
+
+Build & deploy your own:
+
+```bash
+cd contract
+rustup target add wasm32-unknown-unknown
+cargo build --target wasm32-unknown-unknown --release
+near deploy <your-account>.testnet \
+  target/wasm32-unknown-unknown/release/tip_jar.wasm \
+  --initFunction new --initArgs '{"beneficiary":"<creator>.testnet"}'
+```
 
 ## Run it
 

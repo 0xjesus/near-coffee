@@ -23,7 +23,7 @@ class _CoffeeAppState extends State<CoffeeApp> {
   late final NearWalletController controller = NearWalletController(
     network: MyNearWalletNetwork.testnet,
     contractId: NearService.contractId,
-    methodNames: const ['add_message'],
+    methodNames: const ['tip'],
     callbackScheme: 'nearcoffee',
     keyStore: SharedPrefsKeyStore(),
     client: NearRpcClient.testnet(),
