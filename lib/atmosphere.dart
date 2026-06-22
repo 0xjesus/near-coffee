@@ -15,9 +15,10 @@ class CoffeeBackground extends StatefulWidget {
 
 class _CoffeeBackgroundState extends State<CoffeeBackground>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _c =
-      AnimationController(vsync: this, duration: const Duration(seconds: 14))
-        ..repeat(reverse: true);
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 14),
+  )..repeat(reverse: true);
 
   @override
   void dispose() {

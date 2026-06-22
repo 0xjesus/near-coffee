@@ -12,10 +12,10 @@ class Supporter {
   final String amountNear; // display, e.g. "1.00"
 
   factory Supporter.fromJson(Map<String, dynamic> j) => Supporter(
-        sender: (j['account_id'] ?? '') as String,
-        text: (j['message'] ?? '') as String,
-        amountNear: _yoctoToNear((j['amount'] ?? '0').toString()),
-      );
+    sender: (j['account_id'] ?? '') as String,
+    text: (j['message'] ?? '') as String,
+    amountNear: _yoctoToNear((j['amount'] ?? '0').toString()),
+  );
 
   static String _yoctoToNear(String yocto) {
     try {
@@ -92,7 +92,8 @@ class NearService {
     );
   }
 
-  String explorerTxUrl(String hash) => 'https://testnet.nearblocks.io/txns/$hash';
+  String explorerTxUrl(String hash) =>
+      'https://testnet.nearblocks.io/txns/$hash';
 
   void close() => client.close();
 }

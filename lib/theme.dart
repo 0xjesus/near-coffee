@@ -35,47 +35,51 @@ class Coffee {
   // ── Type ─────────────────────────────────────────────────────────────────
   // Fraunces (wonky warm serif) for display, DM Sans for UI, Space Mono for
   // the receipt / amounts / hashes.
-  static TextStyle display(double size,
-          {FontWeight weight = FontWeight.w600,
-          Color color = ink,
-          double? height,
-          double letter = -0.5}) =>
-      GoogleFonts.fraunces(
-        fontSize: size,
-        fontWeight: weight,
-        color: color,
-        height: height,
-        letterSpacing: letter,
-      );
+  static TextStyle display(
+    double size, {
+    FontWeight weight = FontWeight.w600,
+    Color color = ink,
+    double? height,
+    double letter = -0.5,
+  }) => GoogleFonts.fraunces(
+    fontSize: size,
+    fontWeight: weight,
+    color: color,
+    height: height,
+    letterSpacing: letter,
+  );
 
-  static TextStyle body(double size,
-          {FontWeight weight = FontWeight.w400,
-          Color color = ink,
-          double? height,
-          double letter = 0}) =>
-      GoogleFonts.dmSans(
-        fontSize: size,
-        fontWeight: weight,
-        color: color,
-        height: height,
-        letterSpacing: letter,
-      );
+  static TextStyle body(
+    double size, {
+    FontWeight weight = FontWeight.w400,
+    Color color = ink,
+    double? height,
+    double letter = 0,
+  }) => GoogleFonts.dmSans(
+    fontSize: size,
+    fontWeight: weight,
+    color: color,
+    height: height,
+    letterSpacing: letter,
+  );
 
-  static TextStyle mono(double size,
-          {FontWeight weight = FontWeight.w400,
-          Color color = ink,
-          double letter = 0,
-          double? height}) =>
-      GoogleFonts.spaceMono(
-        fontSize: size,
-        fontWeight: weight,
-        color: color,
-        letterSpacing: letter,
-        height: height,
-      );
+  static TextStyle mono(
+    double size, {
+    FontWeight weight = FontWeight.w400,
+    Color color = ink,
+    double letter = 0,
+    double? height,
+  }) => GoogleFonts.spaceMono(
+    fontSize: size,
+    fontWeight: weight,
+    color: color,
+    letterSpacing: letter,
+    height: height,
+  );
 
   /// A small all-caps "stamped" label (used for receipt headers, eyebrows).
-  static TextStyle stamp(double size, {Color color = inkSoft}) => GoogleFonts.spaceMono(
+  static TextStyle stamp(double size, {Color color = inkSoft}) =>
+      GoogleFonts.spaceMono(
         fontSize: size,
         fontWeight: FontWeight.w700,
         color: color,

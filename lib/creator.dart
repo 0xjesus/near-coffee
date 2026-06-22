@@ -16,7 +16,8 @@ class Creator {
   static const jesus = Creator(
     name: 'Jesús',
     handle: 'nearcoffee-creator.testnet',
-    bio: 'Building the NEAR × Flutter mobile stack — open source, for the community.',
+    bio:
+        'Building the NEAR × Flutter mobile stack — open source, for the community.',
     initials: 'JB',
   );
 }

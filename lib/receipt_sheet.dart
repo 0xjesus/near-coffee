@@ -45,8 +45,9 @@ class ReceiptSheet extends StatelessWidget {
   final String from, to, message, txHash, explorerUrl;
   final Tier tier;
 
-  String get _short =>
-      txHash.length > 14 ? '${txHash.substring(0, 7)}…${txHash.substring(txHash.length - 5)}' : txHash;
+  String get _short => txHash.length > 14
+      ? '${txHash.substring(0, 7)}…${txHash.substring(txHash.length - 5)}'
+      : txHash;
 
   @override
   Widget build(BuildContext context) {
@@ -72,13 +73,17 @@ class ReceiptSheet extends StatelessWidget {
                     delay: at(),
                     child: Column(
                       children: [
-                        Text('NEAR ☕ COFFEE',
-                            textAlign: TextAlign.center,
-                            style: Coffee.stamp(15, color: Coffee.ink)),
+                        Text(
+                          'NEAR ☕ COFFEE',
+                          textAlign: TextAlign.center,
+                          style: Coffee.stamp(15, color: Coffee.ink),
+                        ),
                         const SizedBox(height: 4),
-                        Text('TIP RECEIPT',
-                            textAlign: TextAlign.center,
-                            style: Coffee.stamp(11, color: Coffee.inkSoft)),
+                        Text(
+                          'TIP RECEIPT',
+                          textAlign: TextAlign.center,
+                          style: Coffee.stamp(11, color: Coffee.inkSoft),
+                        ),
                       ],
                     ),
                   ),
@@ -95,7 +100,10 @@ class ReceiptSheet extends StatelessWidget {
                   ),
                   if (message.trim().isNotEmpty) ...[
                     const SizedBox(height: 10),
-                    Reveal(delay: at(), child: _RLine('MEMO', '“${message.trim()}”')),
+                    Reveal(
+                      delay: at(),
+                      child: _RLine('MEMO', '“${message.trim()}”'),
+                    ),
                   ],
                   const SizedBox(height: 16),
                   Reveal(delay: at(), child: const DashedLine()),
@@ -108,12 +116,17 @@ class ReceiptSheet extends StatelessWidget {
                       children: [
                         Text('TOTAL', style: Coffee.stamp(12)),
                         const Spacer(),
-                        Text(tier.near, style: Coffee.mono(30, weight: FontWeight.w700)),
+                        Text(
+                          tier.near,
+                          style: Coffee.mono(30, weight: FontWeight.w700),
+                        ),
                         const SizedBox(width: 6),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 4),
-                          child: Text('NEAR',
-                              style: Coffee.mono(13, color: Coffee.inkSoft)),
+                          child: Text(
+                            'NEAR',
+                            style: Coffee.mono(13, color: Coffee.inkSoft),
+                          ),
                         ),
                       ],
                     ),
@@ -130,25 +143,36 @@ class ReceiptSheet extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text('SETTLED ON NEAR TESTNET',
-                            style: Coffee.stamp(10, color: Coffee.mintInk)),
+                        Text(
+                          'SETTLED ON NEAR TESTNET',
+                          style: Coffee.stamp(10, color: Coffee.mintInk),
+                        ),
                         const SizedBox(height: 8),
                         InkWell(
-                          onTap: () => launchUrl(Uri.parse(explorerUrl),
-                              mode: LaunchMode.externalApplication),
+                          onTap: () => launchUrl(
+                            Uri.parse(explorerUrl),
+                            mode: LaunchMode.externalApplication,
+                          ),
                           borderRadius: BorderRadius.circular(8),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4),
                             child: Row(
                               children: [
                                 Text('TX  ', style: Coffee.stamp(12)),
-                                Text(_short,
-                                    style: Coffee.mono(13,
-                                        color: Coffee.terracotta,
-                                        weight: FontWeight.w700)),
+                                Text(
+                                  _short,
+                                  style: Coffee.mono(
+                                    13,
+                                    color: Coffee.terracotta,
+                                    weight: FontWeight.w700,
+                                  ),
+                                ),
                                 const SizedBox(width: 6),
-                                const Icon(Icons.open_in_new,
-                                    size: 14, color: Coffee.terracotta),
+                                const Icon(
+                                  Icons.open_in_new,
+                                  size: 14,
+                                  color: Coffee.terracotta,
+                                ),
                               ],
                             ),
                           ),
@@ -159,9 +183,11 @@ class ReceiptSheet extends StatelessWidget {
                   const SizedBox(height: 18),
                   Reveal(
                     delay: at(),
-                    child: Text('thank you for the coffee  ☕',
-                        textAlign: TextAlign.center,
-                        style: Coffee.display(17, color: Coffee.espresso)),
+                    child: Text(
+                      'thank you for the coffee  ☕',
+                      textAlign: TextAlign.center,
+                      style: Coffee.display(17, color: Coffee.espresso),
+                    ),
                   ),
                   const SizedBox(height: 18),
                   Reveal(
@@ -193,9 +219,11 @@ class _RLine extends StatelessWidget {
         SizedBox(width: 64, child: Text(label, style: Coffee.stamp(12))),
         const SizedBox(width: 10),
         Expanded(
-          child: Text(value,
-              textAlign: TextAlign.right,
-              style: Coffee.mono(13.5, color: Coffee.ink)),
+          child: Text(
+            value,
+            textAlign: TextAlign.right,
+            style: Coffee.mono(13.5, color: Coffee.ink),
+          ),
         ),
       ],
     );

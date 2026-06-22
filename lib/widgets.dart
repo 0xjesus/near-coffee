@@ -23,8 +23,10 @@ class _RevealState extends State<Reveal> with SingleTickerProviderStateMixin {
     vsync: this,
     duration: const Duration(milliseconds: 620),
   );
-  late final Animation<double> _a =
-      CurvedAnimation(parent: _c, curve: Curves.easeOutCubic);
+  late final Animation<double> _a = CurvedAnimation(
+    parent: _c,
+    curve: Curves.easeOutCubic,
+  );
 
   @override
   void initState() {
@@ -94,17 +96,22 @@ class PaperCard extends StatelessWidget {
 
 /// Receipt-style horizontal dashed rule.
 class DashedLine extends StatelessWidget {
-  const DashedLine({super.key, this.color = Coffee.line, this.dash = 5, this.gap = 4});
+  const DashedLine({
+    super.key,
+    this.color = Coffee.line,
+    this.dash = 5,
+    this.gap = 4,
+  });
   final Color color;
   final double dash;
   final double gap;
 
   @override
   Widget build(BuildContext context) => SizedBox(
-        height: 1,
-        width: double.infinity,
-        child: CustomPaint(painter: _DashPainter(color, dash, gap)),
-      );
+    height: 1,
+    width: double.infinity,
+    child: CustomPaint(painter: _DashPainter(color, dash, gap)),
+  );
 }
 
 class _DashPainter extends CustomPainter {
@@ -118,7 +125,11 @@ class _DashPainter extends CustomPainter {
       ..strokeWidth = 1.4;
     double x = 0;
     while (x < size.width) {
-      canvas.drawLine(Offset(x, 0), Offset(math.min(x + dash, size.width), 0), p);
+      canvas.drawLine(
+        Offset(x, 0),
+        Offset(math.min(x + dash, size.width), 0),
+        p,
+      );
       x += dash + gap;
     }
   }
@@ -130,13 +141,20 @@ class _DashPainter extends CustomPainter {
 /// Clips its child with a torn/perforated bottom (and optionally top) edge —
 /// the tear-off look of a paper receipt.
 class TornEdge extends StatelessWidget {
-  const TornEdge({super.key, required this.child, this.top = false, this.bottom = true});
+  const TornEdge({
+    super.key,
+    required this.child,
+    this.top = false,
+    this.bottom = true,
+  });
   final Widget child;
   final bool top, bottom;
 
   @override
-  Widget build(BuildContext context) =>
-      ClipPath(clipper: _TornClipper(top: top, bottom: bottom), child: child);
+  Widget build(BuildContext context) => ClipPath(
+    clipper: _TornClipper(top: top, bottom: bottom),
+    child: child,
+  );
 }
 
 class _TornClipper extends CustomClipper<Path> {
@@ -257,9 +275,14 @@ class _CoffeeButtonState extends State<CoffeeButton> {
                 : Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(widget.label,
-                          style: Coffee.body(16.5,
-                              weight: FontWeight.w700, color: fg)),
+                      Text(
+                        widget.label,
+                        style: Coffee.body(
+                          16.5,
+                          weight: FontWeight.w700,
+                          color: fg,
+                        ),
+                      ),
                       if (widget.icon != null) ...[
                         const SizedBox(width: 8),
                         Icon(widget.icon, size: 19, color: fg),
@@ -313,8 +336,10 @@ class _PaidStampState extends State<PaidStamp>
           border: Border.all(color: Coffee.mintInk, width: 2.4),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Text(widget.label,
-            style: Coffee.stamp(20, color: Coffee.mintInk)),
+        child: Text(
+          widget.label,
+          style: Coffee.stamp(20, color: Coffee.mintInk),
+        ),
       ),
     );
   }
