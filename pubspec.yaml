@@ -1,4 +1,4 @@
-name: brew
+name: near_coffee
 description: "Brew — buy your favourite NEAR builder a coffee. A tip jar built with the near_dart SDK."
 publish_to: 'none'
 version: 0.1.0+1

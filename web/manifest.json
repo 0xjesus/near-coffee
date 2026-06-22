@@ -1,6 +1,6 @@
 {
-    "name": "brew",
-    "short_name": "brew",
+    "name": "NearCoffee",
+    "short_name": "NearCoffee",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

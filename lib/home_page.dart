@@ -3,15 +3,15 @@ import 'package:near_dart/near_dart.dart';
 import 'package:near_wallet_connect/near_wallet_connect.dart'
     show NearWalletController;
 
-import 'brew_atmosphere.dart';
-import 'brew_theme.dart';
-import 'brew_widgets.dart';
+import 'atmosphere.dart';
+import 'theme.dart';
+import 'widgets.dart';
 import 'creator.dart';
 import 'near_service.dart';
 import 'receipt_sheet.dart';
 
-class BrewPage extends StatefulWidget {
-  const BrewPage({
+class CoffeePage extends StatefulWidget {
+  const CoffeePage({
     super.key,
     required this.controller,
     required this.service,
@@ -23,10 +23,10 @@ class BrewPage extends StatefulWidget {
   final Creator creator;
 
   @override
-  State<BrewPage> createState() => _BrewPageState();
+  State<CoffeePage> createState() => _CoffeePageState();
 }
 
-class _BrewPageState extends State<BrewPage> {
+class _CoffeePageState extends State<CoffeePage> {
   final _msg = TextEditingController();
   int _tier = 0;
   bool _sending = false;
@@ -98,8 +98,8 @@ class _BrewPageState extends State<BrewPage> {
     ScaffoldMessenger.of(context)
       ..clearSnackBars()
       ..showSnackBar(SnackBar(
-        backgroundColor: Brew.ink,
-        content: Text(m, style: Brew.body(14, color: Brew.paper)),
+        backgroundColor: Coffee.ink,
+        content: Text(m, style: Coffee.body(14, color: Coffee.paper)),
       ));
   }
 
@@ -107,8 +107,8 @@ class _BrewPageState extends State<BrewPage> {
   Widget build(BuildContext context) {
     final connected = _c.isConnected;
     return Scaffold(
-      backgroundColor: Brew.paper,
-      body: BrewBackground(
+      backgroundColor: Coffee.paper,
+      body: CoffeeBackground(
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -148,20 +148,20 @@ class _BrewPageState extends State<BrewPage> {
           height: 56,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: Brew.paperDeep,
+            color: Coffee.paperDeep,
             shape: BoxShape.circle,
-            border: Border.all(color: Brew.line),
+            border: Border.all(color: Coffee.line),
           ),
           child: const Text('☕', style: TextStyle(fontSize: 26)),
         ),
         const SizedBox(height: 14),
         Text.rich(
           TextSpan(children: [
-            TextSpan(text: 'buy ', style: Brew.display(30)),
+            TextSpan(text: 'buy ', style: Coffee.display(30)),
             TextSpan(
                 text: widget.creator.name,
-                style: Brew.display(30, color: Brew.terracotta)),
-            TextSpan(text: ' a coffee', style: Brew.display(30)),
+                style: Coffee.display(30, color: Coffee.terracotta)),
+            TextSpan(text: ' a coffee', style: Coffee.display(30)),
           ]),
           textAlign: TextAlign.center,
         ),
@@ -170,7 +170,7 @@ class _BrewPageState extends State<BrewPage> {
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Text(widget.creator.bio,
               textAlign: TextAlign.center,
-              style: Brew.body(14.5, color: Brew.inkSoft, height: 1.4)),
+              style: Coffee.body(14.5, color: Coffee.inkSoft, height: 1.4)),
         ),
       ],
     );
@@ -193,10 +193,10 @@ class _BrewPageState extends State<BrewPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(widget.creator.name,
-                      style: Brew.body(16, weight: FontWeight.w700)),
+                      style: Coffee.body(16, weight: FontWeight.w700)),
                   const SizedBox(height: 2),
                   Text('@${widget.creator.handle}',
-                      style: Brew.mono(12.5, color: Brew.inkSoft)),
+                      style: Coffee.mono(12.5, color: Coffee.inkSoft)),
                 ],
               ),
               const Spacer(),
@@ -211,7 +211,7 @@ class _BrewPageState extends State<BrewPage> {
               const Eyebrow('Pick a treat'),
               const Spacer(),
               Text(tier.amountLabel,
-                  style: Brew.mono(13, color: Brew.terracotta, weight: FontWeight.w700)),
+                  style: Coffee.mono(13, color: Coffee.terracotta, weight: FontWeight.w700)),
             ],
           ),
           const SizedBox(height: 12),
@@ -233,14 +233,14 @@ class _BrewPageState extends State<BrewPage> {
           _messageField(),
           const SizedBox(height: 18),
           if (connected)
-            BrewButton(
+            CoffeeButton(
               label: 'Send ${tier.near} NEAR',
               icon: Icons.arrow_forward,
               loading: _sending,
               onPressed: _send,
             )
           else
-            BrewButton(
+            CoffeeButton(
               label: 'Connect NEAR wallet',
               icon: Icons.account_balance_wallet_outlined,
               loading: _c.busy,
@@ -250,7 +250,7 @@ class _BrewPageState extends State<BrewPage> {
             const SizedBox(height: 10),
             Text('Connect once — then tips sign locally, no more redirects.',
                 textAlign: TextAlign.center,
-                style: Brew.body(12.5, color: Brew.inkSoft)),
+                style: Coffee.body(12.5, color: Coffee.inkSoft)),
           ],
         ],
       ),
@@ -262,11 +262,11 @@ class _BrewPageState extends State<BrewPage> {
         height: 46,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: Brew.espresso,
+          color: Coffee.espresso,
           shape: BoxShape.circle,
         ),
         child: Text(widget.creator.initials,
-            style: Brew.display(17, color: Brew.paper, weight: FontWeight.w600)),
+            style: Coffee.display(17, color: Coffee.paper, weight: FontWeight.w600)),
       );
 
   Widget _connectedChip() {
@@ -277,16 +277,16 @@ class _BrewPageState extends State<BrewPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
-          color: Brew.mint.withValues(alpha: 0.16),
+          color: Coffee.mint.withValues(alpha: 0.16),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Brew.mint.withValues(alpha: 0.5)),
+          border: Border.all(color: Coffee.mint.withValues(alpha: 0.5)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.check_circle, size: 13, color: Brew.mintInk),
+            const Icon(Icons.check_circle, size: 13, color: Coffee.mintInk),
             const SizedBox(width: 5),
-            Text(short, style: Brew.mono(11, color: Brew.mintInk, weight: FontWeight.w700)),
+            Text(short, style: Coffee.mono(11, color: Coffee.mintInk, weight: FontWeight.w700)),
           ],
         ),
       ),
@@ -296,9 +296,9 @@ class _BrewPageState extends State<BrewPage> {
   Widget _messageField() {
     return Container(
       decoration: BoxDecoration(
-        color: Brew.paperDeep,
-        borderRadius: BorderRadius.circular(Brew.rMd),
-        border: Border.all(color: Brew.line),
+        color: Coffee.paperDeep,
+        borderRadius: BorderRadius.circular(Coffee.rMd),
+        border: Border.all(color: Coffee.line),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
       child: TextField(
@@ -306,13 +306,13 @@ class _BrewPageState extends State<BrewPage> {
         maxLength: 140,
         minLines: 1,
         maxLines: 3,
-        style: Brew.body(14.5, color: Brew.ink),
-        cursorColor: Brew.terracotta,
+        style: Coffee.body(14.5, color: Coffee.ink),
+        cursorColor: Coffee.terracotta,
         decoration: InputDecoration(
           counterText: '',
           border: InputBorder.none,
           hintText: 'leave a message…',
-          hintStyle: Brew.body(14.5, color: Brew.inkSoft.withValues(alpha: 0.7)),
+          hintStyle: Coffee.body(14.5, color: Coffee.inkSoft.withValues(alpha: 0.7)),
         ),
       ),
     );
@@ -327,7 +327,7 @@ class _BrewPageState extends State<BrewPage> {
         GestureDetector(
           onTap: _loadingWall ? null : _loadSupporters,
           child: Icon(Icons.refresh,
-              size: 17, color: Brew.inkSoft.withValues(alpha: 0.8)),
+              size: 17, color: Coffee.inkSoft.withValues(alpha: 0.8)),
         ),
       ],
     );
@@ -342,18 +342,18 @@ class _BrewPageState extends State<BrewPage> {
             width: 22,
             height: 22,
             child: CircularProgressIndicator(
-                strokeWidth: 2.2, color: Brew.terracotta),
+                strokeWidth: 2.2, color: Coffee.terracotta),
           ),
         ),
       );
     }
     if (_supporters.isEmpty) {
       return PaperCard(
-        color: Brew.paperDeep,
+        color: Coffee.paperDeep,
         padding: const EdgeInsets.all(22),
         child: Text('Be the first to leave a tip ☕',
             textAlign: TextAlign.center,
-            style: Brew.body(14, color: Brew.inkSoft)),
+            style: Coffee.body(14, color: Coffee.inkSoft)),
       );
     }
     return Column(
@@ -373,10 +373,10 @@ class _BrewPageState extends State<BrewPage> {
         const DashedLine(),
         const SizedBox(height: 14),
         Text('BUILT WITH THE NEAR FLUTTER SDK',
-            style: Brew.stamp(10, color: Brew.inkSoft)),
+            style: Coffee.stamp(10, color: Coffee.inkSoft)),
         const SizedBox(height: 6),
         Text('near_dart · near_wallet_connect',
-            style: Brew.mono(12, color: Brew.terracotta)),
+            style: Coffee.mono(12, color: Coffee.terracotta)),
       ],
     );
   }
@@ -399,16 +399,16 @@ class _TierTile extends StatelessWidget {
         curve: Curves.easeOut,
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: selected ? Brew.terracotta.withValues(alpha: 0.10) : Brew.paperDeep,
-          borderRadius: BorderRadius.circular(Brew.rMd),
+          color: selected ? Coffee.terracotta.withValues(alpha: 0.10) : Coffee.paperDeep,
+          borderRadius: BorderRadius.circular(Coffee.rMd),
           border: Border.all(
-            color: selected ? Brew.terracotta : Brew.line,
+            color: selected ? Coffee.terracotta : Coffee.line,
             width: selected ? 1.8 : 1,
           ),
           boxShadow: selected
               ? [
                   BoxShadow(
-                    color: Brew.terracotta.withValues(alpha: 0.16),
+                    color: Coffee.terracotta.withValues(alpha: 0.16),
                     blurRadius: 16,
                     offset: const Offset(0, 8),
                   ),
@@ -420,12 +420,12 @@ class _TierTile extends StatelessWidget {
             Text(tier.emoji, style: const TextStyle(fontSize: 24)),
             const SizedBox(height: 6),
             Text(tier.label,
-                style: Brew.body(12.5,
+                style: Coffee.body(12.5,
                     weight: FontWeight.w700,
-                    color: selected ? Brew.terracottaDeep : Brew.ink)),
+                    color: selected ? Coffee.terracottaDeep : Coffee.ink)),
             const SizedBox(height: 2),
             Text(tier.near,
-                style: Brew.mono(12, color: Brew.inkSoft, weight: FontWeight.w700)),
+                style: Coffee.mono(12, color: Coffee.inkSoft, weight: FontWeight.w700)),
           ],
         ),
       ),
@@ -443,9 +443,9 @@ class _SupporterCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: Brew.receipt,
-        borderRadius: BorderRadius.circular(Brew.rMd),
-        border: Border.all(color: Brew.lineSoft),
+        color: Coffee.receipt,
+        borderRadius: BorderRadius.circular(Coffee.rMd),
+        border: Border.all(color: Coffee.lineSoft),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -457,10 +457,10 @@ class _SupporterCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(s.sender,
-                    style: Brew.mono(12.5, color: Brew.espresso, weight: FontWeight.w700)),
+                    style: Coffee.mono(12.5, color: Coffee.espresso, weight: FontWeight.w700)),
                 const SizedBox(height: 3),
                 Text(s.text,
-                    style: Brew.body(14, color: Brew.ink, height: 1.3)),
+                    style: Coffee.body(14, color: Coffee.ink, height: 1.3)),
               ],
             ),
           ),

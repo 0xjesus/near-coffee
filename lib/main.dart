@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:near_wallet_connect/near_wallet_connect.dart';
 
-import 'brew_page.dart';
-import 'brew_theme.dart';
+import 'home_page.dart';
+import 'theme.dart';
 import 'near_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const BrewApp());
+  runApp(const CoffeeApp());
 }
 
-class BrewApp extends StatefulWidget {
-  const BrewApp({super.key});
+class CoffeeApp extends StatefulWidget {
+  const CoffeeApp({super.key});
 
   @override
-  State<BrewApp> createState() => _BrewAppState();
+  State<CoffeeApp> createState() => _CoffeeAppState();
 }
 
-class _BrewAppState extends State<BrewApp> {
+class _CoffeeAppState extends State<CoffeeApp> {
   final NearService service = NearService();
 
   late final NearWalletController controller = NearWalletController(
     network: MyNearWalletNetwork.testnet,
     contractId: NearService.contractId,
     methodNames: const ['add_message'],
-    callbackScheme: 'brew',
+    callbackScheme: 'nearcoffee',
     keyStore: SharedPrefsKeyStore(),
     client: NearRpcClient.testnet(),
   );
@@ -39,10 +39,10 @@ class _BrewAppState extends State<BrewApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Brew · buy a NEAR builder a coffee',
+      title: 'NearCoffee · buy a NEAR builder a coffee',
       debugShowCheckedModeBanner: false,
-      theme: Brew.theme(),
-      home: BrewPage(controller: controller, service: service),
+      theme: Coffee.theme(),
+      home: CoffeePage(controller: controller, service: service),
     );
   }
 }

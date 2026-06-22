@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// The "Brew" design language — a warm paper receipt.
+/// The "Coffee" design language — a warm paper receipt.
 ///
 /// Light, tactile, café. Cream paper, espresso ink, a terracotta call to
 /// action, and NEAR mint reserved for the single "settled on-chain" moment.
 /// Deliberately the opposite of the dark glass SDK demo so the product has
 /// its own identity.
-class Brew {
-  Brew._();
+class Coffee {
+  Coffee._();
 
   // ── Paper & ink ──────────────────────────────────────────────────────────
   static const paper = Color(0xFFFBF6EC); // warm cream canvas

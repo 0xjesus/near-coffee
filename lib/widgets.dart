@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'brew_theme.dart';
+import 'theme.dart';
 
 /// Staggered fade + rise on mount. `delay` orchestrates the page-load cascade.
 class Reveal extends StatefulWidget {
@@ -62,8 +62,8 @@ class PaperCard extends StatelessWidget {
     super.key,
     required this.child,
     this.padding = const EdgeInsets.all(22),
-    this.color = Brew.receipt,
-    this.radius = Brew.rLg,
+    this.color = Coffee.receipt,
+    this.radius = Coffee.rLg,
   });
   final Widget child;
   final EdgeInsets padding;
@@ -77,10 +77,10 @@ class PaperCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(radius),
-        border: Border.all(color: Brew.line, width: 1),
+        border: Border.all(color: Coffee.line, width: 1),
         boxShadow: [
           BoxShadow(
-            color: Brew.espresso.withValues(alpha: 0.10),
+            color: Coffee.espresso.withValues(alpha: 0.10),
             blurRadius: 30,
             spreadRadius: -6,
             offset: const Offset(0, 18),
@@ -94,7 +94,7 @@ class PaperCard extends StatelessWidget {
 
 /// Receipt-style horizontal dashed rule.
 class DashedLine extends StatelessWidget {
-  const DashedLine({super.key, this.color = Brew.line, this.dash = 5, this.gap = 4});
+  const DashedLine({super.key, this.color = Coffee.line, this.dash = 5, this.gap = 4});
   final Color color;
   final double dash;
   final double gap;
@@ -177,17 +177,17 @@ class _TornClipper extends CustomClipper<Path> {
 
 /// Small caps "stamped" eyebrow label.
 class Eyebrow extends StatelessWidget {
-  const Eyebrow(this.text, {super.key, this.color = Brew.inkSoft});
+  const Eyebrow(this.text, {super.key, this.color = Coffee.inkSoft});
   final String text;
   final Color color;
   @override
   Widget build(BuildContext context) =>
-      Text(text.toUpperCase(), style: Brew.stamp(11, color: color));
+      Text(text.toUpperCase(), style: Coffee.stamp(11, color: color));
 }
 
 /// Primary terracotta call-to-action with a tactile press + loading state.
-class BrewButton extends StatefulWidget {
-  const BrewButton({
+class CoffeeButton extends StatefulWidget {
+  const CoffeeButton({
     super.key,
     required this.label,
     required this.onPressed,
@@ -204,16 +204,16 @@ class BrewButton extends StatefulWidget {
   final bool filled;
 
   @override
-  State<BrewButton> createState() => _BrewButtonState();
+  State<CoffeeButton> createState() => _CoffeeButtonState();
 }
 
-class _BrewButtonState extends State<BrewButton> {
+class _CoffeeButtonState extends State<CoffeeButton> {
   bool _down = false;
 
   @override
   Widget build(BuildContext context) {
     final on = widget.enabled && !widget.loading && widget.onPressed != null;
-    final fg = widget.filled ? Colors.white : Brew.terracotta;
+    final fg = widget.filled ? Colors.white : Coffee.terracotta;
     return AnimatedScale(
       scale: _down && on ? 0.97 : 1,
       duration: const Duration(milliseconds: 110),
@@ -230,15 +230,15 @@ class _BrewButtonState extends State<BrewButton> {
             height: 58,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: widget.filled ? Brew.terracotta : Colors.transparent,
-              borderRadius: BorderRadius.circular(Brew.rMd),
+              color: widget.filled ? Coffee.terracotta : Colors.transparent,
+              borderRadius: BorderRadius.circular(Coffee.rMd),
               border: widget.filled
                   ? null
-                  : Border.all(color: Brew.terracotta, width: 1.6),
+                  : Border.all(color: Coffee.terracotta, width: 1.6),
               boxShadow: widget.filled && on
                   ? [
                       BoxShadow(
-                        color: Brew.terracotta.withValues(alpha: 0.35),
+                        color: Coffee.terracotta.withValues(alpha: 0.35),
                         blurRadius: 22,
                         offset: const Offset(0, 10),
                       ),
@@ -258,7 +258,7 @@ class _BrewButtonState extends State<BrewButton> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(widget.label,
-                          style: Brew.body(16.5,
+                          style: Coffee.body(16.5,
                               weight: FontWeight.w700, color: fg)),
                       if (widget.icon != null) ...[
                         const SizedBox(width: 8),
@@ -310,11 +310,11 @@ class _PaidStampState extends State<PaidStamp>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          border: Border.all(color: Brew.mintInk, width: 2.4),
+          border: Border.all(color: Coffee.mintInk, width: 2.4),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(widget.label,
-            style: Brew.stamp(20, color: Brew.mintInk)),
+            style: Coffee.stamp(20, color: Coffee.mintInk)),
       ),
     );
   }

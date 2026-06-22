@@ -1,4 +1,4 @@
-# ☕ Brew — buy a NEAR builder a coffee
+# ☕ NearCoffee — buy a NEAR builder a coffee
 
 A tip jar for the NEAR ecosystem, built entirely on the published **NEAR Flutter
 stack**. Connect a wallet, pick a treat, leave a message — the tip settles
@@ -34,7 +34,7 @@ await signer.callFunction(
   contractId: AccountId('guestbook.near-examples.testnet'),
   methodName: 'add_message',
   args: {'text': message},
-  deposit: NearToken.parse('1'), // 1 NEAR
+  deposit: NearToken.parse('1'), // 1 NEAR ≈ a coffee
 );
 ```
 
@@ -58,10 +58,10 @@ bio, tip tiers).
 
 ## Design
 
-"Brew" is a warm paper receipt: cream canvas, espresso ink, a terracotta call to
-action, and NEAR mint reserved for the single *settled on-chain* moment. Fraunces
-for display, DM Sans for UI, Space Mono for the receipt. Deliberately the opposite
-of the dark SDK demo — this is a product, with its own identity.
+A warm paper receipt: cream canvas, espresso ink, a terracotta call to action, and
+NEAR mint reserved for the single *settled on-chain* moment. Fraunces for display,
+DM Sans for UI, Space Mono for the receipt. Deliberately the opposite of the dark
+SDK demo — this is a product, with its own identity.
 
 ## License
 

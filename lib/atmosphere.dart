@@ -1,19 +1,19 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'brew_theme.dart';
+import 'theme.dart';
 
 /// Warm paper canvas: a faint grain, a couple of coffee-ring stains, and a
 /// slow breathing warmth so the page feels alive without ever distracting
 /// from the receipt at its centre.
-class BrewBackground extends StatefulWidget {
-  const BrewBackground({super.key, required this.child});
+class CoffeeBackground extends StatefulWidget {
+  const CoffeeBackground({super.key, required this.child});
   final Widget child;
 
   @override
-  State<BrewBackground> createState() => _BrewBackgroundState();
+  State<CoffeeBackground> createState() => _CoffeeBackgroundState();
 }
 
-class _BrewBackgroundState extends State<BrewBackground>
+class _CoffeeBackgroundState extends State<CoffeeBackground>
     with SingleTickerProviderStateMixin {
   late final AnimationController _c =
       AnimationController(vsync: this, duration: const Duration(seconds: 14))
@@ -30,7 +30,7 @@ class _BrewBackgroundState extends State<BrewBackground>
     return Stack(
       fit: StackFit.expand,
       children: [
-        const ColoredBox(color: Brew.paper),
+        const ColoredBox(color: Coffee.paper),
         AnimatedBuilder(
           animation: _c,
           builder: (_, __) => CustomPaint(
@@ -60,8 +60,8 @@ class _PaperPainter extends CustomPainter {
           center: const Alignment(0, -1.05),
           radius: 1.25,
           colors: [
-            Brew.amber.withValues(alpha: glow),
-            Brew.paper.withValues(alpha: 0),
+            Coffee.amber.withValues(alpha: glow),
+            Coffee.paper.withValues(alpha: 0),
           ],
         ).createShader(Offset.zero & size),
     );
@@ -73,7 +73,7 @@ class _PaperPainter extends CustomPainter {
 
     // Paper grain — a sparse deterministic speckle.
     final rnd = math.Random(7);
-    final grain = Paint()..color = Brew.espresso.withValues(alpha: 0.022);
+    final grain = Paint()..color = Coffee.espresso.withValues(alpha: 0.022);
     final count = (size.width * size.height / 2600).clamp(0, 1400).toInt();
     for (var i = 0; i < count; i++) {
       final x = rnd.nextDouble() * size.width;
@@ -89,8 +89,8 @@ class _PaperPainter extends CustomPainter {
           begin: Alignment.center,
           end: Alignment.bottomCenter,
           colors: [
-            Brew.paper.withValues(alpha: 0),
-            Brew.espresso.withValues(alpha: 0.04),
+            Coffee.paper.withValues(alpha: 0),
+            Coffee.espresso.withValues(alpha: 0.04),
           ],
         ).createShader(Offset.zero & size),
     );
@@ -100,13 +100,13 @@ class _PaperPainter extends CustomPainter {
     final ring = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.4
-      ..color = Brew.espresso.withValues(alpha: 0.05);
+      ..color = Coffee.espresso.withValues(alpha: 0.05);
     canvas.drawCircle(center, r, ring);
     canvas.drawCircle(center, r - 5, ring..strokeWidth = 1.2);
     canvas.drawCircle(
       center,
       r - 1.6,
-      Paint()..color = Brew.espresso.withValues(alpha: 0.015),
+      Paint()..color = Coffee.espresso.withValues(alpha: 0.015),
     );
   }
 

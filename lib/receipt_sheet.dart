@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'brew_theme.dart';
-import 'brew_widgets.dart';
+import 'theme.dart';
+import 'widgets.dart';
 import 'creator.dart';
 
 /// The printed tip receipt. Lines cascade in like a thermal printer, then the
@@ -19,7 +19,7 @@ Future<void> showReceipt(
     context: context,
     backgroundColor: Colors.transparent,
     isScrollControlled: true,
-    barrierColor: Brew.espresso.withValues(alpha: 0.35),
+    barrierColor: Coffee.espresso.withValues(alpha: 0.35),
     builder: (_) => ReceiptSheet(
       from: from,
       to: to,
@@ -62,7 +62,7 @@ class ReceiptSheet extends StatelessWidget {
             top: true,
             bottom: true,
             child: Container(
-              color: Brew.receipt,
+              color: Coffee.receipt,
               padding: const EdgeInsets.fromLTRB(26, 30, 26, 30),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -72,13 +72,13 @@ class ReceiptSheet extends StatelessWidget {
                     delay: at(),
                     child: Column(
                       children: [
-                        Text('☕  B R E W',
+                        Text('NEAR ☕ COFFEE',
                             textAlign: TextAlign.center,
-                            style: Brew.stamp(15, color: Brew.ink)),
+                            style: Coffee.stamp(15, color: Coffee.ink)),
                         const SizedBox(height: 4),
                         Text('TIP RECEIPT',
                             textAlign: TextAlign.center,
-                            style: Brew.stamp(11, color: Brew.inkSoft)),
+                            style: Coffee.stamp(11, color: Coffee.inkSoft)),
                       ],
                     ),
                   ),
@@ -106,14 +106,14 @@ class ReceiptSheet extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.baseline,
                       textBaseline: TextBaseline.alphabetic,
                       children: [
-                        Text('TOTAL', style: Brew.stamp(12)),
+                        Text('TOTAL', style: Coffee.stamp(12)),
                         const Spacer(),
-                        Text(tier.near, style: Brew.mono(30, weight: FontWeight.w700)),
+                        Text(tier.near, style: Coffee.mono(30, weight: FontWeight.w700)),
                         const SizedBox(width: 6),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 4),
                           child: Text('NEAR',
-                              style: Brew.mono(13, color: Brew.inkSoft)),
+                              style: Coffee.mono(13, color: Coffee.inkSoft)),
                         ),
                       ],
                     ),
@@ -131,7 +131,7 @@ class ReceiptSheet extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text('SETTLED ON NEAR TESTNET',
-                            style: Brew.stamp(10, color: Brew.mintInk)),
+                            style: Coffee.stamp(10, color: Coffee.mintInk)),
                         const SizedBox(height: 8),
                         InkWell(
                           onTap: () => launchUrl(Uri.parse(explorerUrl),
@@ -141,14 +141,14 @@ class ReceiptSheet extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 4),
                             child: Row(
                               children: [
-                                Text('TX  ', style: Brew.stamp(12)),
+                                Text('TX  ', style: Coffee.stamp(12)),
                                 Text(_short,
-                                    style: Brew.mono(13,
-                                        color: Brew.terracotta,
+                                    style: Coffee.mono(13,
+                                        color: Coffee.terracotta,
                                         weight: FontWeight.w700)),
                                 const SizedBox(width: 6),
                                 const Icon(Icons.open_in_new,
-                                    size: 14, color: Brew.terracotta),
+                                    size: 14, color: Coffee.terracotta),
                               ],
                             ),
                           ),
@@ -159,14 +159,14 @@ class ReceiptSheet extends StatelessWidget {
                   const SizedBox(height: 18),
                   Reveal(
                     delay: at(),
-                    child: Text('thank you for the brew  ☕',
+                    child: Text('thank you for the coffee  ☕',
                         textAlign: TextAlign.center,
-                        style: Brew.display(17, color: Brew.espresso)),
+                        style: Coffee.display(17, color: Coffee.espresso)),
                   ),
                   const SizedBox(height: 18),
                   Reveal(
                     delay: at(),
-                    child: BrewButton(
+                    child: CoffeeButton(
                       label: 'Done',
                       filled: false,
                       onPressed: () => Navigator.of(context).pop(),
@@ -190,12 +190,12 @@ class _RLine extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(width: 64, child: Text(label, style: Brew.stamp(12))),
+        SizedBox(width: 64, child: Text(label, style: Coffee.stamp(12))),
         const SizedBox(width: 10),
         Expanded(
           child: Text(value,
               textAlign: TextAlign.right,
-              style: Brew.mono(13.5, color: Brew.ink)),
+              style: Coffee.mono(13.5, color: Coffee.ink)),
         ),
       ],
     );

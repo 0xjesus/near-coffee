@@ -14,7 +14,7 @@ class Supporter {
       );
 }
 
-/// All NEAR reads/writes for Brew, on testnet, via the published near_dart SDK.
+/// All NEAR reads/writes for Coffee, on testnet, via the published near_dart SDK.
 ///
 /// Tips are settled on-chain through the canonical NEAR guestbook contract:
 /// `add_message{ text }` carries the tip as its attached deposit, and
