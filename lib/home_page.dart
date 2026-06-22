@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:near_dart/near_dart.dart';
 import 'package:near_wallet_connect/near_wallet_connect.dart'
     show NearWalletController;
@@ -28,6 +29,7 @@ class CoffeePage extends StatefulWidget {
 
 class _CoffeePageState extends State<CoffeePage> {
   final _msg = TextEditingController();
+  final _custom = TextEditingController();
   int _tier = 0;
   bool _sending = false;
   bool _loadingWall = true;
@@ -47,10 +49,27 @@ class _CoffeePageState extends State<CoffeePage> {
   void dispose() {
     _c.removeListener(_onWallet);
     _msg.dispose();
+    _custom.dispose();
     super.dispose();
   }
 
   void _onWallet() => setState(() {});
+
+  /// A valid, positive custom amount is typed.
+  bool get _customActive {
+    final v = double.tryParse(_custom.text.trim());
+    return v != null && v > 0;
+  }
+
+  /// The amount the tip will use: the custom field if valid, else the tier.
+  String get _amountNear {
+    if (_customActive) return _custom.text.trim();
+    return _tier >= 0 ? kTiers[_tier].near : '';
+  }
+
+  /// The tier shown on the receipt (a synthetic one for custom amounts).
+  Tier get _effectiveTier =>
+      _customActive ? Tier('☕', 'Tip', _custom.text.trim()) : kTiers[_tier];
 
   Future<void> _loadSupporters() async {
     setState(() => _loadingWall = true);
@@ -63,15 +82,23 @@ class _CoffeePageState extends State<CoffeePage> {
   }
 
   Future<void> _send() async {
-    final tier = kTiers[_tier];
+    final amount = _amountNear;
+    if (amount.isEmpty || (double.tryParse(amount) ?? 0) <= 0) {
+      _toast('Pick a treat or enter a custom amount');
+      return;
+    }
+    final tier = _effectiveTier;
     final signer = await _c.signer();
     if (signer == null) {
       _toast('Connect a wallet first');
       return;
     }
     setState(() => _sending = true);
-    final res = await widget.service
-        .sendTip(signer: signer, near: tier.near, message: _msg.text);
+    final res = await widget.service.sendTip(
+      signer: signer,
+      near: amount,
+      message: _msg.text,
+    );
     if (!mounted) return;
     setState(() => _sending = false);
 
@@ -88,6 +115,7 @@ class _CoffeePageState extends State<CoffeePage> {
           explorerUrl: widget.service.explorerTxUrl(hash),
         );
         _msg.clear();
+        _custom.clear();
         _loadSupporters();
       case RpcFailure(:final error):
         _toast(error.message);
@@ -97,10 +125,12 @@ class _CoffeePageState extends State<CoffeePage> {
   void _toast(String m) {
     ScaffoldMessenger.of(context)
       ..clearSnackBars()
-      ..showSnackBar(SnackBar(
-        backgroundColor: Coffee.ink,
-        content: Text(m, style: Coffee.body(14, color: Coffee.paper)),
-      ));
+      ..showSnackBar(
+        SnackBar(
+          backgroundColor: Coffee.ink,
+          content: Text(m, style: Coffee.body(14, color: Coffee.paper)),
+        ),
+      );
   }
 
   @override
@@ -156,21 +186,26 @@ class _CoffeePageState extends State<CoffeePage> {
         ),
         const SizedBox(height: 14),
         Text.rich(
-          TextSpan(children: [
-            TextSpan(text: 'buy ', style: Coffee.display(30)),
-            TextSpan(
+          TextSpan(
+            children: [
+              TextSpan(text: 'buy ', style: Coffee.display(30)),
+              TextSpan(
                 text: widget.creator.name,
-                style: Coffee.display(30, color: Coffee.terracotta)),
-            TextSpan(text: ' a coffee', style: Coffee.display(30)),
-          ]),
+                style: Coffee.display(30, color: Coffee.terracotta),
+              ),
+              TextSpan(text: ' a coffee', style: Coffee.display(30)),
+            ],
+          ),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 8),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Text(widget.creator.bio,
-              textAlign: TextAlign.center,
-              style: Coffee.body(14.5, color: Coffee.inkSoft, height: 1.4)),
+          child: Text(
+            widget.creator.bio,
+            textAlign: TextAlign.center,
+            style: Coffee.body(14.5, color: Coffee.inkSoft, height: 1.4),
+          ),
         ),
       ],
     );
@@ -178,7 +213,7 @@ class _CoffeePageState extends State<CoffeePage> {
 
   // ── The jar (profile + tiers + message + CTA) ──────────────────────────
   Widget _jar(bool connected) {
-    final tier = kTiers[_tier];
+    final amount = _amountNear;
     return PaperCard(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -189,18 +224,25 @@ class _CoffeePageState extends State<CoffeePage> {
             children: [
               _avatar(),
               const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(widget.creator.name,
-                      style: Coffee.body(16, weight: FontWeight.w700)),
-                  const SizedBox(height: 2),
-                  Text('@${widget.creator.handle}',
-                      style: Coffee.mono(12.5, color: Coffee.inkSoft)),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.creator.name,
+                      style: Coffee.body(16, weight: FontWeight.w700),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '@${widget.creator.handle}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Coffee.mono(12.5, color: Coffee.inkSoft),
+                    ),
+                  ],
+                ),
               ),
-              const Spacer(),
-              if (connected) _connectedChip(),
+              if (connected) ...[const SizedBox(width: 8), _connectedChip()],
             ],
           ),
           const SizedBox(height: 18),
@@ -210,8 +252,14 @@ class _CoffeePageState extends State<CoffeePage> {
             children: [
               const Eyebrow('Pick a treat'),
               const Spacer(),
-              Text(tier.amountLabel,
-                  style: Coffee.mono(13, color: Coffee.terracotta, weight: FontWeight.w700)),
+              Text(
+                amount.isEmpty ? '—' : '$amount NEAR',
+                style: Coffee.mono(
+                  13,
+                  color: Coffee.terracotta,
+                  weight: FontWeight.w700,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -222,19 +270,24 @@ class _CoffeePageState extends State<CoffeePage> {
                 Expanded(
                   child: _TierTile(
                     tier: kTiers[i],
-                    selected: _tier == i,
-                    onTap: () => setState(() => _tier = i),
+                    selected: _tier == i && !_customActive,
+                    onTap: () => setState(() {
+                      _tier = i;
+                      _custom.clear();
+                    }),
                   ),
                 ),
               ],
             ],
           ),
+          const SizedBox(height: 10),
+          _customField(),
           const SizedBox(height: 16),
           _messageField(),
           const SizedBox(height: 18),
           if (connected)
             CoffeeButton(
-              label: 'Send ${tier.near} NEAR',
+              label: amount.isEmpty ? 'Send a tip' : 'Send $amount NEAR',
               icon: Icons.arrow_forward,
               loading: _sending,
               onPressed: _send,
@@ -248,9 +301,11 @@ class _CoffeePageState extends State<CoffeePage> {
             ),
           if (!connected) ...[
             const SizedBox(height: 10),
-            Text('Connect once — then tips sign locally, no more redirects.',
-                textAlign: TextAlign.center,
-                style: Coffee.body(12.5, color: Coffee.inkSoft)),
+            Text(
+              'Connect once — then tips sign locally, no more redirects.',
+              textAlign: TextAlign.center,
+              style: Coffee.body(12.5, color: Coffee.inkSoft),
+            ),
           ],
         ],
       ),
@@ -258,16 +313,15 @@ class _CoffeePageState extends State<CoffeePage> {
   }
 
   Widget _avatar() => Container(
-        width: 46,
-        height: 46,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: Coffee.espresso,
-          shape: BoxShape.circle,
-        ),
-        child: Text(widget.creator.initials,
-            style: Coffee.display(17, color: Coffee.paper, weight: FontWeight.w600)),
-      );
+    width: 46,
+    height: 46,
+    alignment: Alignment.center,
+    decoration: BoxDecoration(color: Coffee.espresso, shape: BoxShape.circle),
+    child: Text(
+      widget.creator.initials,
+      style: Coffee.display(17, color: Coffee.paper, weight: FontWeight.w600),
+    ),
+  );
 
   Widget _connectedChip() {
     final id = _c.account!.accountId.value;
@@ -286,7 +340,14 @@ class _CoffeePageState extends State<CoffeePage> {
           children: [
             const Icon(Icons.check_circle, size: 13, color: Coffee.mintInk),
             const SizedBox(width: 5),
-            Text(short, style: Coffee.mono(11, color: Coffee.mintInk, weight: FontWeight.w700)),
+            Text(
+              short,
+              style: Coffee.mono(
+                11,
+                color: Coffee.mintInk,
+                weight: FontWeight.w700,
+              ),
+            ),
           ],
         ),
       ),
@@ -312,8 +373,71 @@ class _CoffeePageState extends State<CoffeePage> {
           counterText: '',
           border: InputBorder.none,
           hintText: 'leave a message…',
-          hintStyle: Coffee.body(14.5, color: Coffee.inkSoft.withValues(alpha: 0.7)),
+          hintStyle: Coffee.body(
+            14.5,
+            color: Coffee.inkSoft.withValues(alpha: 0.7),
+          ),
         ),
+      ),
+    );
+  }
+
+  // Enter any amount — overrides the tier selection when valid.
+  Widget _customField() {
+    final active = _customActive;
+    return Container(
+      height: 50,
+      decoration: BoxDecoration(
+        color: Coffee.paperDeep,
+        borderRadius: BorderRadius.circular(Coffee.rMd),
+        border: Border.all(
+          color: active ? Coffee.terracotta : Coffee.line,
+          width: active ? 1.6 : 1,
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      child: Row(
+        children: [
+          Text(
+            'Ⓝ',
+            style: Coffee.mono(
+              16,
+              color: active ? Coffee.terracotta : Coffee.inkSoft,
+              weight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: TextField(
+              controller: _custom,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+              ],
+              style: Coffee.mono(
+                15.5,
+                color: Coffee.ink,
+                weight: FontWeight.w700,
+              ),
+              cursorColor: Coffee.terracotta,
+              decoration: InputDecoration(
+                isCollapsed: true,
+                border: InputBorder.none,
+                hintText: 'or enter a custom amount',
+                hintStyle: Coffee.body(
+                  14,
+                  color: Coffee.inkSoft.withValues(alpha: 0.7),
+                ),
+              ),
+              onChanged: (_) => setState(() {
+                if (_customActive) _tier = -1;
+              }),
+            ),
+          ),
+          Text('NEAR', style: Coffee.mono(12.5, color: Coffee.inkSoft)),
+        ],
       ),
     );
   }
@@ -326,8 +450,11 @@ class _CoffeePageState extends State<CoffeePage> {
         const Spacer(),
         GestureDetector(
           onTap: _loadingWall ? null : _loadSupporters,
-          child: Icon(Icons.refresh,
-              size: 17, color: Coffee.inkSoft.withValues(alpha: 0.8)),
+          child: Icon(
+            Icons.refresh,
+            size: 17,
+            color: Coffee.inkSoft.withValues(alpha: 0.8),
+          ),
         ),
       ],
     );
@@ -342,7 +469,9 @@ class _CoffeePageState extends State<CoffeePage> {
             width: 22,
             height: 22,
             child: CircularProgressIndicator(
-                strokeWidth: 2.2, color: Coffee.terracotta),
+              strokeWidth: 2.2,
+              color: Coffee.terracotta,
+            ),
           ),
         ),
       );
@@ -351,9 +480,11 @@ class _CoffeePageState extends State<CoffeePage> {
       return PaperCard(
         color: Coffee.paperDeep,
         padding: const EdgeInsets.all(22),
-        child: Text('Be the first to leave a tip ☕',
-            textAlign: TextAlign.center,
-            style: Coffee.body(14, color: Coffee.inkSoft)),
+        child: Text(
+          'Be the first to leave a tip ☕',
+          textAlign: TextAlign.center,
+          style: Coffee.body(14, color: Coffee.inkSoft),
+        ),
       );
     }
     return Column(
@@ -372,11 +503,15 @@ class _CoffeePageState extends State<CoffeePage> {
       children: [
         const DashedLine(),
         const SizedBox(height: 14),
-        Text('BUILT WITH THE NEAR FLUTTER SDK',
-            style: Coffee.stamp(10, color: Coffee.inkSoft)),
+        Text(
+          'BUILT WITH THE NEAR FLUTTER SDK',
+          style: Coffee.stamp(10, color: Coffee.inkSoft),
+        ),
         const SizedBox(height: 6),
-        Text('near_dart · near_wallet_connect',
-            style: Coffee.mono(12, color: Coffee.terracotta)),
+        Text(
+          'near_dart · near_wallet_connect',
+          style: Coffee.mono(12, color: Coffee.terracotta),
+        ),
       ],
     );
   }
@@ -384,8 +519,11 @@ class _CoffeePageState extends State<CoffeePage> {
 
 // ── Tier tile ──────────────────────────────────────────────────────────────
 class _TierTile extends StatelessWidget {
-  const _TierTile(
-      {required this.tier, required this.selected, required this.onTap});
+  const _TierTile({
+    required this.tier,
+    required this.selected,
+    required this.onTap,
+  });
   final Tier tier;
   final bool selected;
   final VoidCallback onTap;
@@ -399,7 +537,9 @@ class _TierTile extends StatelessWidget {
         curve: Curves.easeOut,
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: selected ? Coffee.terracotta.withValues(alpha: 0.10) : Coffee.paperDeep,
+          color: selected
+              ? Coffee.terracotta.withValues(alpha: 0.10)
+              : Coffee.paperDeep,
           borderRadius: BorderRadius.circular(Coffee.rMd),
           border: Border.all(
             color: selected ? Coffee.terracotta : Coffee.line,
@@ -419,13 +559,23 @@ class _TierTile extends StatelessWidget {
           children: [
             Text(tier.emoji, style: const TextStyle(fontSize: 24)),
             const SizedBox(height: 6),
-            Text(tier.label,
-                style: Coffee.body(12.5,
-                    weight: FontWeight.w700,
-                    color: selected ? Coffee.terracottaDeep : Coffee.ink)),
+            Text(
+              tier.label,
+              style: Coffee.body(
+                12.5,
+                weight: FontWeight.w700,
+                color: selected ? Coffee.terracottaDeep : Coffee.ink,
+              ),
+            ),
             const SizedBox(height: 2),
-            Text(tier.near,
-                style: Coffee.mono(12, color: Coffee.inkSoft, weight: FontWeight.w700)),
+            Text(
+              tier.near,
+              style: Coffee.mono(
+                12,
+                color: Coffee.inkSoft,
+                weight: FontWeight.w700,
+              ),
+            ),
           ],
         ),
       ),
@@ -456,11 +606,19 @@ class _SupporterCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(s.sender,
-                    style: Coffee.mono(12.5, color: Coffee.espresso, weight: FontWeight.w700)),
+                Text(
+                  s.sender,
+                  style: Coffee.mono(
+                    12.5,
+                    color: Coffee.espresso,
+                    weight: FontWeight.w700,
+                  ),
+                ),
                 const SizedBox(height: 3),
-                Text(s.text,
-                    style: Coffee.body(14, color: Coffee.ink, height: 1.3)),
+                Text(
+                  s.text,
+                  style: Coffee.body(14, color: Coffee.ink, height: 1.3),
+                ),
               ],
             ),
           ),
@@ -471,9 +629,14 @@ class _SupporterCard extends StatelessWidget {
               color: Coffee.terracotta.withValues(alpha: 0.10),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Text('${s.amountNear} Ⓝ',
-                style: Coffee.mono(11.5,
-                    color: Coffee.terracottaDeep, weight: FontWeight.w700)),
+            child: Text(
+              '${s.amountNear} Ⓝ',
+              style: Coffee.mono(
+                11.5,
+                color: Coffee.terracottaDeep,
+                weight: FontWeight.w700,
+              ),
+            ),
           ),
         ],
       ),
