@@ -1,15 +1,19 @@
+import 'dart:async';
+
+import 'package:app_links/app_links.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:near_dart/near_dart.dart';
 import 'package:near_wallet_connect/near_wallet_connect.dart'
     show NearWalletController;
 
 import 'atmosphere.dart';
-import 'theme.dart';
-import 'widgets.dart';
 import 'creator.dart';
 import 'near_service.dart';
 import 'receipt_sheet.dart';
+import 'theme.dart';
+import 'wallet_tip.dart';
+import 'widgets.dart';
 
 class CoffeePage extends StatefulWidget {
   const CoffeePage({
@@ -35,6 +39,13 @@ class _CoffeePageState extends State<CoffeePage> {
   bool _loadingWall = true;
   List<Supporter> _supporters = const [];
 
+  final _appLinks = AppLinks();
+  StreamSubscription<Uri>? _linkSub;
+  late final WalletTip _walletTip = WalletTip(
+    client: widget.service.client,
+    contractId: NearService.contractId,
+  );
+
   NearWalletController get _c => widget.controller;
 
   @override
@@ -43,11 +54,41 @@ class _CoffeePageState extends State<CoffeePage> {
     _c.addListener(_onWallet);
     _c.init();
     _loadSupporters();
+    _initLinks();
+  }
+
+  /// Handles the MyNearWallet `/sign` callback (the tip's tx hash).
+  Future<void> _initLinks() async {
+    if (kIsWeb) {
+      await _handleTipCallback(Uri.base);
+      return;
+    }
+    final initial = await _appLinks.getInitialLink();
+    if (initial != null) await _handleTipCallback(initial);
+    _linkSub = _appLinks.uriLinkStream.listen(_handleTipCallback);
+  }
+
+  Future<void> _handleTipCallback(Uri uri) async {
+    final res = await WalletTip.parseCallback(uri);
+    if (res == null || !mounted) return;
+    await showReceipt(
+      context,
+      from: res.from,
+      to: widget.creator.handle,
+      tier: Tier('☕', 'Tip', res.near),
+      message: res.message,
+      txHash: res.txHash,
+      explorerUrl: widget.service.explorerTxUrl(res.txHash),
+    );
+    _msg.clear();
+    _custom.clear();
+    _loadSupporters();
   }
 
   @override
   void dispose() {
     _c.removeListener(_onWallet);
+    _linkSub?.cancel();
     _msg.dispose();
     _custom.dispose();
     super.dispose();
@@ -67,10 +108,6 @@ class _CoffeePageState extends State<CoffeePage> {
     return _tier >= 0 ? kTiers[_tier].near : '';
   }
 
-  /// The tier shown on the receipt (a synthetic one for custom amounts).
-  Tier get _effectiveTier =>
-      _customActive ? Tier('☕', 'Tip', _custom.text.trim()) : kTiers[_tier];
-
   Future<void> _loadSupporters() async {
     setState(() => _loadingWall = true);
     final list = await widget.service.supporters();
@@ -87,38 +124,25 @@ class _CoffeePageState extends State<CoffeePage> {
       _toast('Pick a treat or enter a custom amount');
       return;
     }
-    final tier = _effectiveTier;
     final signer = await _c.signer();
     if (signer == null) {
       _toast('Connect a wallet first');
       return;
     }
     setState(() => _sending = true);
-    final res = await widget.service.sendTip(
-      signer: signer,
-      near: amount,
-      message: _msg.text,
-    );
-    if (!mounted) return;
-    setState(() => _sending = false);
-
-    switch (res) {
-      case RpcSuccess(:final value):
-        final hash = value.transaction.hash;
-        await showReceipt(
-          context,
-          from: signer.accountId.value,
-          to: widget.creator.handle,
-          tier: tier,
-          message: _msg.text,
-          txHash: hash,
-          explorerUrl: widget.service.explorerTxUrl(hash),
-        );
-        _msg.clear();
-        _custom.clear();
-        _loadSupporters();
-      case RpcFailure(:final error):
-        _toast(error.message);
+    try {
+      // A function-call key can't attach a deposit, so the tip must be signed
+      // by the wallet's full-access key: redirect to MyNearWallet, approve, and
+      // the receipt is shown when it returns (see _handleTipCallback).
+      await _walletTip.requestTip(
+        signer: signer,
+        near: amount,
+        message: _msg.text,
+      );
+    } catch (e) {
+      _toast('$e');
+    } finally {
+      if (mounted) setState(() => _sending = false);
     }
   }
 
