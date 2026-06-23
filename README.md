@@ -4,7 +4,7 @@
 > published NEAR Flutter SDK**.
 
 <p align="center">
-  <img src="docs/demo/hero.gif" width="260" alt="NearCoffee — tip flow on Android"/>
+  <img src="https://raw.githubusercontent.com/0xjesus/near-coffee/main/docs/demo/hero.gif" width="260" alt="NearCoffee — tip flow on Android"/>
 </p>
 
 <p align="center">
