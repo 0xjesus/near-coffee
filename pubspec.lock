@@ -244,18 +244,18 @@ packages:
     dependency: "direct main"
     description:
       name: near_dart
-      sha256: "34375daf253dd763df4163adfee42cb87fa109fd30cbfaf8fc307db3e55855c9"
+      sha256: c230a5d4b6f0f6b9140cfcf3ae5798c3ddd0dafd1cf82f0dc6060325a8db00f8
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.2"
+    version: "0.3.1"
   near_wallet_connect:
     dependency: "direct main"
     description:
       name: near_wallet_connect
-      sha256: "9a4f938685f72c942b62257839706522bff26164c5ee74060647228f0bfb5551"
+      sha256: "89714d1f8b1258f43a51a6fd64d5eb3a0dc2dd360110a97f83c93af1481c6a97"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.1"
+    version: "0.2.1"
   path:
     dependency: transitive
     description:
@@ -533,6 +533,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  web_socket:
+    dependency: transitive
+    description:
+      name: web_socket
+      sha256: "34d64019aa8e36bf9842ac014bb5d2f5586ca73df5e4d9bf5c936975cae6982c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
+  web_socket_channel:
+    dependency: transitive
+    description:
+      name: web_socket_channel
+      sha256: d645757fb0f4773d602444000a8131ff5d48c9e47adfe9772652dd1a4f2d45c8
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.3"
   xdg_directories:
     dependency: transitive
     description:
