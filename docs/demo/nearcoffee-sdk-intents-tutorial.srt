@@ -1,0 +1,75 @@
+1
+00:00:00,000 --> 00:00:13,824
+near_dart brings NEAR into Dart and Flutter.
+
+2
+00:00:13,824 --> 00:00:28,093
+RPC, primitives, keys, transactions, and contracts.
+
+3
+00:00:28,093 --> 00:00:41,317
+near_wallet_connect adds wallet UX for Flutter apps.
+
+4
+00:00:41,317 --> 00:00:53,078
+Install near_dart and near_wallet_connect.
+
+5
+00:00:53,078 --> 00:01:05,048
+Read balances, contract state, and app data.
+
+6
+00:01:05,048 --> 00:01:19,526
+Build actions, sign, and send from Dart.
+
+7
+00:01:19,526 --> 00:01:35,336
+NearCoffee is the SDK running as a real product.
+
+8
+00:01:35,336 --> 00:01:49,813
+It shows production UX, not only unit tests.
+
+9
+00:01:49,813 --> 00:02:05,545
+Intents do not replace wallets; they extend what apps can route.
+
+10
+00:02:05,545 --> 00:02:20,336
+Quote, deposit instructions, status, and explorer data.
+
+11
+00:02:20,336 --> 00:02:32,907
+AssetCatalog, QuoteBuilder, SwapController, ExplorerClient.
+
+12
+00:02:32,907 --> 00:02:47,385
+0.1 wNEAR to USDC, live 1Click quote, no funds moved.
+
+13
+00:02:47,385 --> 00:03:00,818
+The SDK avoids floating point mistakes.
+
+14
+00:03:00,818 --> 00:03:15,844
+Discovery, quote, dry run, deposit guard, polling.
+
+15
+00:03:15,844 --> 00:03:28,415
+Deposits become internal balances; signed intents authorize actions.
+
+16
+00:03:28,415 --> 00:03:42,840
+Success, processing, refunded, failed, and expired are UI states.
+
+17
+00:03:42,840 --> 00:03:57,031
+Connect wallet, quote intent, execute, poll, show receipt.
+
+18
+00:03:57,031 --> 00:04:12,762
+near_dart is becoming a NEAR application SDK for Flutter.
+
+19
+00:04:12,762 --> 00:04:25,751
+Install the SDK, run NearCoffee, and ship a real NEAR app.
