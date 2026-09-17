@@ -13,8 +13,8 @@ dependencies:
 
   # The whole point: this app is built entirely on the published NEAR Flutter
   # stack — sign & send via near_dart, wallet connect via near_wallet_connect.
-  near_dart: ^0.3.1
-  near_wallet_connect: ^0.2.1
+  near_dart: ^0.6.0
+  near_wallet_connect: ^0.5.0
 
   google_fonts: ^6.2.1
   url_launcher: ^6.3.1
@@ -25,6 +25,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  http: ^1.3.0
 
 flutter:
   uses-material-design: true
